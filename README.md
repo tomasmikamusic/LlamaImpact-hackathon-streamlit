@@ -34,7 +34,8 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 ## Team
 
 <p align="center">
-  <img src="https://drive.google.com/uc?export=view&id=18dntlBui6z--fLlvf0dJRJb9MVA_-y_4" alt="Team" width="300">
+  <img src="https://drive.google.com/uc?export=view&id=1mp-IvXclkS0ml8CHCT9T_NuxqxNInuI7" alt="Team" width="300">
 </p>
+
 
 
