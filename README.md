@@ -4,7 +4,7 @@
 ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat&logo=streamlit&logoColor=white)
 
 
-# Project: [ACADEM-IA DE PROFESORES]
+# Project: ACADEM-IA DE PROFESORES
 
 <p align="center">
   <img src="https://drive.google.com/uc?export=view&id=18dntlBui6z--fLlvf0dJRJb9MVA_-y_4" alt="Logo del Proyecto" width="200">
