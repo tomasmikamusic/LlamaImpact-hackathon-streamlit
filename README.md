@@ -21,12 +21,19 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 
 | Folder/File              | Description                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------- |
-| **/Docs**              | Folder containing PDF files (in English and Spanish) with the documentation about the main ideas pf the project.|
+| **/Docs**                | Folder containing PDF files (in English and Spanish) with the documentation about the main ideas pf the project.|
+| **/srs**                 | Folder containing main file and  requirements.txt file |
 | **requirements.txt**     | File listing dependencies and libraries required to run the project.                           |
 | **gitignore**            | File specifying folders and files to be ignored by version control (git).                      |
 | **LICENSE**              | MIT LICENSE - File specifying the terms under which the source code is shared.                 |
-| **main.py**              | Main Python file serving as an entry point for the application, defining Model configuration and execution|
 | **README.md**            | Main project documentation in English.                                                         |
 | **README_ESP.md**        | Main project documentation in Spanish.                                                         |
 
+
+
+## Team
+
+<p align="center">
+  <img src="[https://drive.google.com/uc?export=view&id=18dntlBui6z--fLlvf0dJRJb9MVA_-y_4](https://drive.google.com/file/d/1mp-IvXclkS0ml8CHCT9T_NuxqxNInuI7/view?usp=sharing)" alt="Team">
+</p>
 
