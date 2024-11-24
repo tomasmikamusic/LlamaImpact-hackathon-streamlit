@@ -38,7 +38,7 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 </p>
 
 
-
+<p align="center">
 | Name                     | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)|![LinkedIn](https://img.shields.io/badge/linkedin-%231DA1F2.svg?style=for-the-badge&logo=linkedin&logoColor=white)                |
 | ------------------------ | ----------------------------------------- | -------------------------------- |
 | **Sergio Rieznik**      | [Sergio Rieznik](https://github.com/) |[Sergio Rieznik](https://www.linkedin.com/in/sergiorieznik/)|
@@ -46,6 +46,6 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 | **Leonardo Cortés**         |[leocortes85](https://github.com/leocortes85/)  |[Leonardo Cortés Zambrano](https://www.linkedin.com/in/leonardo-cort%C3%A9s-zambrano/)|
 | **Juan González**         |[juanfrank77](https://github.com/juanfrank77/)  |[Juan Gonzalez](https://www.linkedin.com/in/juanfrank77/)|
 | **Gino Odar**         |[gino23odar](https://github.com/gino23odar/)  |[Gino Odar](https://www.linkedin.com/in/gino-odar/)|
-
+</p>
 
 
