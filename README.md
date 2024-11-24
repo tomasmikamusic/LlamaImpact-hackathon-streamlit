@@ -34,8 +34,9 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 ## Team
 
 <p align="center">
-  <img src="https://drive.google.com/file/d/1h6T9oYLD-UYUX2pfSJ7e7nDict1klE5I" alt="Team" width="700">
+  <img src="https://drive.google.com/uc?export=view&id=1h6T9oYLD-UYUX2pfSJ7e7nDict1klE5I" alt="Team" width="700">
 </p>
+
 
 
 | Name                     | ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)|![LinkedIn](https://img.shields.io/badge/linkedin-%231DA1F2.svg?style=for-the-badge&logo=linkedin&logoColor=white)                |
