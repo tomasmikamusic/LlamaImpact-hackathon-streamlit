@@ -6,4 +6,6 @@
 
 # Proyecto: [ACADEM-IA DE PROFESORES]
 
-![Logo del Proyecto](https://drive.google.com/uc?export=view&id=18dntlBui6z--fLlvf0dJRJb9MVA_-y_4)
+<p align="center">
+  <img src="https://drive.google.com/uc?export=view&id=18dntlBui6z--fLlvf0dJRJb9MVA_-y_4" alt="Logo del Proyecto" width="200">
+</p>
