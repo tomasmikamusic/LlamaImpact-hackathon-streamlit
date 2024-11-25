@@ -24,10 +24,10 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 | **/docs**                | Folder containing PDF files (in English and Spanish) with the documentation about the main ideas of the project.|
 | **/src**                 | Folder containing main file and `requirements.txt` file |
 | **requirements.txt**     | File listing dependencies and libraries required to run the project.                           |
+| **languages**            | Folder with languages supp in the app.                           |
 | **gitignore**            | File specifying folders and files to be ignored by version control (git).                      |
-| **LICENSE**              | MIT LICENSE - File specifying the terms under which the source code is shared.                 |
 | **README.md**            | Main project documentation in English.                                                         |
-| **README_ESP.md**        | Main project documentation in Spanish.                                                         |
+
 
 
 
