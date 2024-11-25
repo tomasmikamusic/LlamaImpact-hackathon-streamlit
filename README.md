@@ -21,8 +21,8 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 
 | Folder/File              | Description                                                                                  |
 | ------------------------ | -------------------------------------------------------------------------------------------- |
-| **/Docs**                | Folder containing PDF files (in English and Spanish) with the documentation about the main ideas pf the project.|
-| **/srs**                 | Folder containing main file and  requirements.txt file |
+| **/docs**                | Folder containing PDF files (in English and Spanish) with the documentation about the main ideas of the project.|
+| **/src**                 | Folder containing main file and `requirements.txt` file |
 | **requirements.txt**     | File listing dependencies and libraries required to run the project.                           |
 | **gitignore**            | File specifying folders and files to be ignored by version control (git).                      |
 | **LICENSE**              | MIT LICENSE - File specifying the terms under which the source code is shared.                 |
@@ -47,5 +47,5 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 | **Gino Odar**          | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/gino23odar/) | [![LinkedIn](https://img.shields.io/badge/LinkedIn-%231DA1F2.svg?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gino-odar/) |
 
 
-## Final Instructions
-The application uses the pre-trained model GloVe 6B 50d in a txt file, Github does not allow uploads over 100MB. To run the project locally, clone the repo and create a 'data' folder in the root folder. In that data folder, paste the glove.6B.50d.txt file for the embeddings to work. 
+## Running the project
+The application uses the pre-trained model GloVe 6B 50d in a txt file, Github does not allow uploads over 100MB. To run the project locally, clone the repo and create a 'data' folder in the root folder. In that data folder, paste the glove.6B.50d.txt file (which you can [find here](https://drive.google.com/drive/folders/1ozPhAeysEjyBKAmg7PJbfKqpfHlKJ0tu)) for the embeddings to work. 
