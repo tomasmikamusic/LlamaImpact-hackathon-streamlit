@@ -6,10 +6,10 @@ import os
 def load_translations(language):
     path_to_json_en = os.path.join('..', 'languages', 'en.json')
     path_to_json_es = os.path.join('..', 'languages', 'es.json')
-    if language == 'English':
+    if language == 'eng':
         with open(path_to_json_en, 'r') as f:
             return json.load(f)
-    elif language == 'Spanish':
+    elif language == 'esp':
         with open(path_to_json_es, 'r') as f:
             return json.load(f)
         

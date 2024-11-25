@@ -47,4 +47,5 @@ This project was developed as part of the **Llama Impact Pan-LATAM Hackathon**.
 | **Gino Odar**          | [![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/gino23odar/) | [![LinkedIn](https://img.shields.io/badge/LinkedIn-%231DA1F2.svg?style=flat-square&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/gino-odar/) |
 
 
-
+## Final Instructions
+The application uses the pre-trained model GloVe 6B 50d in a txt file, Github does not allow uploads over 100MB. To run the project locally, clone the repo and create a 'data' folder in the root folder. In that data folder, paste the glove.6B.50d.txt file for the embeddings to work. 
