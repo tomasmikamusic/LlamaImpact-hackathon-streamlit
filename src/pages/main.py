@@ -157,10 +157,10 @@ def generate_class_plan(class_details, embeddings, document_chunks):
 # Main app logic
 
 def load_translations(language):
-    if language == 'English':
+    if language == 'eng':
         with open('../languages/en.json', 'r') as f:
             return json.load(f)
-    elif language == 'Spanish':
+    elif language == 'esp':
         with open('../languages/es.json', 'r') as f:
             return json.load(f)
 

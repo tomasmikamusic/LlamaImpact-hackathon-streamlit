@@ -1,7 +1,7 @@
 {
     "welcome_message": "Welcome to the AcademIA App",
     "instructions": "Use the sidebar to navigate:",
-    "start_instructions": "Start by providing class details on the **SettingsPage**.",
+    "start_instructions": "Start by providing class details on the **config** page.",
     "generate_class_plan": "Then, generate your class plan on the **main**(class plan generator) page.",
     "footer": "Powered by Llama and AI/ML API",
     "settings_title": "Settings",
@@ -22,13 +22,14 @@
     "success_message": "Class details saved successfully! Proceed to the next page.",
     "class_plan_generator": "Class Plan Generator",
     "use_saved_details": "Use the saved class details to generate your class plan.",
-    "no_class_details": "No class details found! Please fill in the Welcome Page first.",
+    "no_class_details": "No class details found! Please fill in the config page first.",
     "class_details_title": "Class Details:",
     "upload_reference_materials": "Upload Reference Materials",
     "upload_documents": "Upload documents (optional):",
     "generate_class_plan_2": "Generate Class Plan",
     "generating_embeddings": "Generating embeddings...",
     "generated_embeddings": "Generated embeddings for",
-    "generated_class_plan": "Generated Class Plan:"
+    "generated_class_plan": "Generated Class Plan:",
+    "language_selection": "Select Language"
   }
   

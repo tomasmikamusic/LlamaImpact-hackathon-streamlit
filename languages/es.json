@@ -1,8 +1,8 @@
 {
     "welcome_message": "Bienvenido a la aplicacion AcademIA",
     "instructions": "Usa la barra lateral para navegar:",
-    "start_instructions": "Comienza proporcionando los detalles de la clase en la **SettingsPage**.",
-    "generate_class_plan": "Luego, genera tu plan de clase en la página **principal** (generador de planes de clase).",
+    "start_instructions": "Comienza proporcionando los detalles de la clase en la pagina **config**.",
+    "generate_class_plan": "Luego, genera tu plan de clase en la página **main/principal** (generador de planes de clase).",
     "footer": "Impulsado por Llama y la API AI/ML",
     "settings_title": "Configuraciones",
     "settings_instructions": "Por favor, proporcione los detalles de la clase.",
@@ -22,14 +22,15 @@
     "success_message": "\u00a1Detalles de la clase guardados correctamente! Proceda a la siguiente p\u00e1gina.",
     "class_plan_generator": "Generador de Plan de Clase",
     "use_saved_details": "Usa los detalles de clase guardados para generar tu plan de clase.",
-    "no_class_details": "\u00a1No se encontraron detalles de la clase! Por favor, completa la p\u00e1gina de bienvenida primero.",
+    "no_class_details": "\u00a1No se encontraron detalles de la clase! Por favor, completa la p\u00e1gina de config primero.",
     "class_details_title": "Detalles de la Clase:",
     "upload_reference_materials": "Subir Materiales de Referencia",
     "upload_documents": "Sube documentos (opcional):",
     "generate_class_plan_2": "Generar Plan de Clase",
     "generating_embeddings": "Generando incrustaciones...",
     "generated_embeddings": "Incrustaciones generadas para",
-    "generated_class_plan": "Plan de clase generado:"
+    "generated_class_plan": "Plan de clase generado:",
+    "language_selection": "Seleccionar Idioma"
 }
 
   
