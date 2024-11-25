@@ -4,6 +4,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 import PyPDF2
 import numpy as np
+import json
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Load environment variables
@@ -122,19 +123,15 @@ def generate_class_plan(class_details, embeddings, document_chunks):
         else:
             context = "No reference materials provided."
 
-        print(context)
-
         user_input = (
-            f"Class topic: {class_details['subject']}, Number of students: {
-                class_details['num_students']}, "
-            f"Time available: {class_details['time_available']} minutes, Class level: {
-                class_details['level']}, "
-            f"Modality: {class_details['modality']}, Purpose: {
-                class_details['purpose']}, "
-            f"Language: {class_details.get('language', 'English')}, Special instructions: {
-                class_details.get('instructions', 'None')}, "
+            f"Class topic: {class_details['subject']}, Number of students: {class_details['num_students']}, "
+            f"Time available: {class_details['time_available']} minutes, Class level: {class_details['level']}, "
+            f"Modality: {class_details['modality']}, Purpose: {class_details['purpose']}, "
+            f"Language: {class_details.get('language', 'Spanish')}, Special instructions: {class_details.get('instructions', 'None')}, "
             f"Reference materials context: {context}"
         )
+
+        print(class_details.get('language'))
 
         temp = 0.7
 
@@ -147,11 +144,10 @@ def generate_class_plan(class_details, embeddings, document_chunks):
 
         # Use OpenAI client for generating class plans
         completion = client.chat.completions.create(
-            model="meta-llama/Meta-Llama-3-8B-Instruct-Turbo",
+            model="meta-llama/Llama-3.2-3B-Instruct-Turbo",
             messages=[
                 {"role": "system", "content": os.getenv("SYSTEM_PROMPT")},
-                {"role": "user", "content": f"Please generate a class plan using the following information: {
-                    user_input}"},
+                {"role": "user", "content": f"Please generate a class plan using the following information: {user_input} in the following language: {class_details.get('language', 'Spanish')}" },
             ],
             temperature=temp,
         )
@@ -160,43 +156,56 @@ def generate_class_plan(class_details, embeddings, document_chunks):
 
 # Main app logic
 
+def load_translations(language):
+    if language == 'English':
+        with open('../languages/en.json', 'r') as f:
+            return json.load(f)
+    elif language == 'Spanish':
+        with open('../languages/es.json', 'r') as f:
+            return json.load(f)
+
 
 def app():
-    st.title("Class Plan Generator")
-    st.write("Use the saved class details to generate your class plan.")
+    # Language selection
+    language = st.session_state.get('language', {})
+    translations = load_translations(language)
+
+    # Title and instructions
+    st.title(translations['class_plan_generator'])
+    st.write(translations['use_saved_details'])
 
     if "class_details" not in st.session_state:
-        st.error("No class details found! Please fill in the Welcome Page first.")
+        st.error(translations['no_class_details'])
         return
 
     class_details = st.session_state["class_details"]
 
-    st.subheader("Class Details:")
+    st.subheader(translations['class_details_title'])
     st.json(class_details)
 
     # File upload for additional context
-    st.sidebar.header("Upload Reference Materials")
+    st.sidebar.header(translations['upload_reference_materials'])
     uploaded_files = st.sidebar.file_uploader(
-        "Upload documents (optional):",
+        translations['upload_documents'],
         type=["txt", "pdf"],
         accept_multiple_files=True,
     )
 
-    if st.button("Generate Class Plan"):
+    if st.button(translations['generate_class_plan_2']):
         document_chunks = process_uploaded_files(uploaded_files)
         # Optionally, generate embeddings
         embeddings = []
         if document_chunks:
-            with st.spinner("Generating embeddings..."):
+            with st.spinner(translations['generating_embeddings']):
                 embeddings = generate_embeddings(document_chunks)
-                st.write(f"Generated embeddings for {len(embeddings)} chunks.")
+                st.write(f"{translations['generated_embeddings']} {len(embeddings)} chunks.")
 
         print(f"document_chunks: {document_chunks}")
         print(f"embeddings: {embeddings}")
 
         class_plan = generate_class_plan(
             class_details, embeddings, document_chunks)
-        st.subheader("Generated Class Plan:")
+        st.subheader(translations['generated_class_plan'])
         st.write(class_plan)
 
 
