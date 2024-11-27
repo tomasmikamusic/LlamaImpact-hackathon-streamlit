@@ -42,7 +42,12 @@ translations = load_translations(st.session_state.language)
 st.title(translations['welcome_message'])
 col1, col2, col3 = st.columns([1, 6, 1])  # Adjust these numbers to control the spacing
 with col2:
-    st.image("../assets/academ-ia-2.png", caption="AcademIA logo", width=250, clamp=True)
+    import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+image_path = os.path.join(BASE_DIR, '../assets/academ-ia-2.png')
+
+st.image(image_path, caption="AcademIA logo", width=250, clamp=True)
 st.write(f"""
     {translations['instructions']}
     - {translations['start_instructions']}
