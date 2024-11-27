@@ -4,7 +4,7 @@ from openai import OpenAI
 # Inicializar el cliente de OpenAI/Llama con la clave directamente
 client = OpenAI(
     base_url="https://api.llama.ai/v1",  # Reemplaza esto si tienes una URL específica para tu API
-    api_key="d196b8da1ffe4e3d812b292b280ce3cf",  # Tu clave API
+    api_key="af0cb46bb4664d0e8b887c7d5c6693d9",  # Tu clave API
 )
 
 def generate_class_plan(class_details):
