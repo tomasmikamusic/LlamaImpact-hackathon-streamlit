@@ -4,61 +4,87 @@ import requests
 # Función para generar el plan de clase
 def generate_class_plan(details):
     try:
-        # Realizar la solicitud a la API
-        response = requests.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
-            headers={"Content-Type": "application/json"},
-            json={"contents": [{"parts": [{"text": f"Generate a class plan for: {details}"}]}]},
-            params={"key": "AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"},
-        )
-
-        # Convertir la respuesta a JSON
-        response_json = response.json()
-
-        # Depurar respuesta completa en la interfaz
-        st.write("API Response:", response_json)
-
-        # Manejar la estructura de la respuesta
-        if "contents" in response_json and len(response_json["contents"]) > 0:
-            return response_json["contents"][0]["parts"][0]["text"]
+        # Endpoint de la API
+        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"
+        
+        # Datos de entrada para la API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": f"Genera un plan de clase con los siguientes detalles: {details}"}
+                    ]
+                }
+            ]
+        }
+        
+        headers = {"Content-Type": "application/json"}
+        
+        # Solicitud a la API
+        response = requests.post(url, json=payload, headers=headers)
+        response_data = response.json()
+        
+        # Verificar si la respuesta contiene candidatos
+        if "candidates" in response_data:
+            plan_text = response_data["candidates"][0]["content"]["parts"][0]["text"]
+            return plan_text
         else:
-            raise KeyError("Estructura inesperada en la respuesta de la API.")
-    except KeyError as e:
-        st.error("La API no devolvió un resultado válido.")
-        st.write("Error Details:", response_json)  # Línea de depuración
-        raise e
-    except requests.exceptions.RequestException as e:
-        st.error("Error al conectarse con la API.")
-        st.write("Detalles del error:", str(e))
-        raise e
+            st.error("La API no devolvió un resultado válido.")
+            st.json(response_data)  # Mostrar la respuesta para depuración
+            return None
+    except Exception as e:
+        st.error(f"Ocurrió un error al generar el plan de clase: {str(e)}")
+        return None
 
-# Configurar la página principal de Streamlit
+# Función principal de la app
 def app():
     st.title("Generador de Plan de Clase")
-    st.write("Sigue las instrucciones para generar un plan de clase basado en los detalles proporcionados.")
-
-    # Comprobar si los detalles de la clase están en el estado de sesión
+    st.write("Proporciona los detalles necesarios para generar un plan de clase personalizado.")
+    
     if "class_details" not in st.session_state:
-        st.error("No se han proporcionado detalles de la clase. Configura los detalles primero en la pestaña de configuración.")
-        return
+        st.session_state["class_details"] = {}
+    
+    # Formulario para ingresar detalles de la clase
+    with st.form("class_details_form"):
+        subject = st.text_input("Materia", key="subject")
+        level = st.text_input("Nivel", key="level")
+        num_students = st.number_input("Número de estudiantes", min_value=1, step=1, key="num_students")
+        time_available = st.number_input("Tiempo disponible (en minutos)", min_value=1, step=1, key="time_available")
+        modality = st.text_input("Modalidad (presencial/virtual)", key="modality")
+        purpose = st.text_input("Propósito de la clase", key="purpose")
+        submit_button = st.form_submit_button("Guardar detalles")
+    
+    # Guardar detalles en el estado de sesión
+    if submit_button:
+        st.session_state["class_details"] = {
+            "subject": subject,
+            "level": level,
+            "num_students": num_students,
+            "time_available": time_available,
+            "modality": modality,
+            "purpose": purpose,
+        }
+        st.success("Detalles guardados exitosamente.")
+    
+    # Mostrar detalles guardados
+    if st.session_state["class_details"]:
+        st.write("### Detalles de la clase:")
+        st.json(st.session_state["class_details"])
+        
+        # Generar plan de clase
+        if st.button("Generar Plan de Clase"):
+            with st.spinner("Generando plan de clase..."):
+                details = st.session_state["class_details"]
+                details_str = (
+                    f"Materia: {details['subject']}, Nivel: {details['level']}, "
+                    f"Número de estudiantes: {details['num_students']}, Tiempo disponible: {details['time_available']} minutos, "
+                    f"Modalidad: {details['modality']}, Propósito: {details['purpose']}"
+                )
+                plan = generate_class_plan(details_str)
+                if plan:
+                    st.subheader("Plan de Clase Generado")
+                    st.write(plan)
 
-    # Obtener los detalles de la clase desde el estado de sesión
-    details = st.session_state["class_details"]
-
-    # Mostrar los detalles en la interfaz
-    st.subheader("Detalles de la Clase")
-    st.json(details)
-
-    # Botón para generar el plan de clase
-    if st.button("Generar Plan de Clase"):
-        st.info("Generando el plan de clase, por favor espera...")
-        try:
-            plan = generate_class_plan(details)
-            st.subheader("Plan de Clase Generado")
-            st.write(plan)
-        except Exception as e:
-            st.error("Ocurrió un error al generar el plan de clase.")
-
-# Ejecutar la aplicación
+# Ejecutar la app
 if __name__ == "__main__":
     app()
