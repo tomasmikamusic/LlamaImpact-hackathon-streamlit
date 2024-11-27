@@ -5,14 +5,17 @@ import json
 # Función para cargar las traducciones en español
 def load_translations():
     try:
-        with open('../languages/es.json', 'r', encoding='utf-8') as f:
+        file_path = os.path.abspath('../languages/es.json')
+        st.write(f"Buscando el archivo en: {file_path}")
+        with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
     except FileNotFoundError:
-        st.error("El archivo de traducción en español no se encontró.")
+        st.error(f"El archivo de traducción en español no se encontró en: {file_path}")
         return {}
     except json.JSONDecodeError:
         st.error("El archivo de traducción en español no es un JSON válido.")
         return {}
+
 
 # Lógica principal de la aplicación
 def app():
