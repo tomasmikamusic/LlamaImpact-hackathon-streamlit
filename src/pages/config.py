@@ -1,58 +1,40 @@
 import streamlit as st
-import os
-import json
 
-# Define the path to the languages directory
-LANGUAGES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../languages'))
+# Configuración de la página
+st.set_page_config(page_title="Configuración de Clase", page_icon="🛠️")
 
-def load_translations(language):
-    """Load translations based on the selected language."""
-    try:
-        if language == 'esp':
-            file_path = os.path.join(LANGUAGES_DIR, 'es.json')
-        elif language == 'eng':
-            file_path = os.path.join(LANGUAGES_DIR, 'en.json')
-        else:
-            raise ValueError(f"Unsupported language: {language}")
-
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-
-    except FileNotFoundError as e:
-        st.error(f"Translation file not found: {e}")
-        raise
-    except Exception as e:
-        st.error(f"An error occurred while loading translations: {e}")
-        raise
-
+# Función principal
 def app():
-    """Main app function for the config page."""
-    # Set page config
-    st.set_page_config(page_title="Config Page", page_icon="⚙️")
+    st.title("Configuración de Clase")
+    st.write("Proporciona los detalles de la clase para generar un plan.")
 
-    # Ensure the language is set in session state
-    if 'language' not in st.session_state:
-        st.session_state.language = 'esp'
+    # Formularios para configurar detalles de la clase
+    with st.form(key="class_details_form"):
+        subject = st.text_input("Tema de la clase", value="Matemáticas")
+        num_students = st.number_input("Número de estudiantes", min_value=1, value=20)
+        time_available = st.number_input("Tiempo disponible (minutos)", min_value=1, value=60)
+        level = st.selectbox("Nivel de la clase", ["Primaria", "Secundaria", "Universidad"])
+        modality = st.selectbox("Modalidad", ["Presencial", "Virtual"])
+        purpose = st.text_area("Propósito de la clase", value="Enseñar conceptos básicos.")
+        field = st.selectbox("Campo", ["STEM", "Ciencias Sociales", "Humanidades"])
+        instructions = st.text_area("Instrucciones especiales", value="Ninguna")
 
-    # Sidebar for language selection
-    language = st.sidebar.selectbox(
-        'Select Language', ['esp', 'eng'], index=['esp', 'eng'].index(st.session_state.language)
-    )
-    st.session_state.language = language
+        submit_button = st.form_submit_button("Guardar detalles")
 
-    # Load translations
-    translations = load_translations(language)
+    # Guardar detalles en la sesión
+    if submit_button:
+        st.session_state["class_details"] = {
+            "subject": subject,
+            "num_students": num_students,
+            "time_available": time_available,
+            "level": level,
+            "modality": modality,
+            "purpose": purpose,
+            "field": field,
+            "instructions": instructions,
+        }
+        st.success("¡Detalles de la clase guardados exitosamente!")
 
-    # Page title
-    st.title(translations.get('config_title', 'Configuration'))
-
-    # Example content
-    st.write(translations.get('config_instructions', 'No instructions available'))
-
-    # Footer
-    st.write(translations.get('footer', 'No footer available'))
-
-# Call the app function
+# Ejecutar la aplicación
 if __name__ == "__main__":
     app()
-
