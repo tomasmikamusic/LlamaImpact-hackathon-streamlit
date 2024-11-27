@@ -2,15 +2,14 @@ import streamlit as st
 import json
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-LANGUAGES_DIR = os.path.join(BASE_DIR, 'languages')
+LANGUAGES_DIR = os.path.join(os.path.dirname(__file__), '../languages')
 
 def load_translations(language):
-    if language == 'en':
-        with open(os.path.join(LANGUAGES_DIR, 'en.json'), 'r', encoding='utf-8') as f:
-            return json.load(f)
-    elif language == 'esp':
+    if language == 'esp':
         with open(os.path.join(LANGUAGES_DIR, 'es.json'), 'r', encoding='utf-8') as f:
+            return json.load(f)
+    elif language == 'eng':
+        with open(os.path.join(LANGUAGES_DIR, 'en.json'), 'r', encoding='utf-8') as f:
             return json.load(f)
 
 # Set page config
