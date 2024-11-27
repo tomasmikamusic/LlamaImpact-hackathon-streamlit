@@ -2,74 +2,66 @@ import streamlit as st
 import requests
 import json
 
-# Configuración de la API de Google Generative Language
+# API endpoint y clave (asegúrate de usar la clave correcta)
+API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
 API_KEY = "AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"
-BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
 
-# Función para generar el plan de clase usando la API
-def generate_class_plan(details):
+def generate_class_plan(class_details):
+    """
+    Genera un plan de clase usando la API de IA.
+    """
+    # Asegúrate de que los detalles se conviertan a texto entendible para la API
+    prompt = (
+        f"Genera un plan de clase sobre el tema '{class_details['subject']}' para {class_details['num_students']} "
+        f"estudiantes. Duración: {class_details['time_available']} minutos. Nivel: {class_details['level']}. "
+        f"Modalidad: {class_details['modality']}. Propósito: {class_details['purpose']}. "
+        f"Instrucciones adicionales: {class_details.get('instructions', 'Ninguna')}. "
+    )
+
     payload = {
-        "contents": [
-            {
-                "parts": [
-                    {"text": f"Generate a class plan for: {details}"}
-                ]
-            }
-        ]
+        "contents": [{"parts": [{"text": prompt}]}]
     }
-    headers = {
-        "Content-Type": "application/json"
-    }
+
     try:
         response = requests.post(
-            f"{BASE_URL}?key={API_KEY}",
-            headers=headers,
-            data=json.dumps(payload)
+            f"{API_URL}?key={API_KEY}",
+            headers={"Content-Type": "application/json"},
+            data=json.dumps(payload),
         )
-        if response.status_code == 200:
-            result = response.json()
+        response.raise_for_status()
+        result = response.json()
+
+        # Verifica si el resultado tiene la estructura correcta
+        if "contents" in result and result["contents"]:
             return result["contents"][0]["parts"][0]["text"]
         else:
-            st.error(f"Error al conectar con la API: {response.status_code} - {response.text}")
-            return None
+            st.error("La API no devolvió un resultado válido.")
+            return "No se pudo generar el plan de clase."
     except requests.exceptions.RequestException as e:
-        st.error(f"Error al conectar con la API: {e}")
-        return None
+        st.error(f"Error al conectar con la API de IA: {e}")
+        return "No se pudo conectar con la API."
 
-# Aplicación principal
 def app():
     st.title("Generador de Plan de Clase")
-    st.write("Proporciona los detalles de la clase para generar un plan.")
+    st.write("Genera un plan de clase basado en los detalles proporcionados en Configuración.")
 
-    # Formulario para ingresar detalles de la clase
-    with st.form(key="class_plan_form"):
-        subject = st.text_input("Tema de la clase")
-        num_students = st.number_input("Número de estudiantes", min_value=1)
-        time_available = st.number_input("Duración de la clase (minutos)", min_value=1)
-        level = st.selectbox("Nivel de la clase", ["Primaria", "Secundaria", "Universitaria"])
-        modality = st.selectbox("Modalidad", ["Presencial", "Online"])
-        purpose = st.text_area("Propósito de la clase")
-        submitted = st.form_submit_button("Generar Plan de Clase")
+    # Verifica si hay detalles configurados
+    if "class_details" not in st.session_state:
+        st.error("No se han configurado detalles de la clase. Ve a Configuración primero.")
+        return
 
-    # Generar el plan de clase si se envía el formulario
-    if submitted:
-        if subject and purpose:
-            st.info("Generando plan de clase...")
-            details = {
-                "subject": subject,
-                "num_students": num_students,
-                "time_available": time_available,
-                "level": level,
-                "modality": modality,
-                "purpose": purpose
-            }
-            plan = generate_class_plan(details)
-            if plan:
-                st.subheader("Plan de Clase Generado")
-                st.write(plan)
-        else:
-            st.error("Por favor, completa todos los campos requeridos.")
+    class_details = st.session_state["class_details"]
 
-# Ejecutar la app
+    # Muestra los detalles de la clase
+    st.subheader("Detalles de la Clase")
+    st.json(class_details)
+
+    # Botón para generar el plan de clase
+    if st.button("Generar Plan de Clase"):
+        st.write("Generando el plan de clase...")
+        plan = generate_class_plan(class_details)
+        st.subheader("Plan de Clase Generado")
+        st.write(plan)
+
 if __name__ == "__main__":
     app()
