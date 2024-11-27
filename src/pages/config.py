@@ -1,65 +1,58 @@
 import streamlit as st
-import json
 import os
+import json
 
-# Function to load translations based on the selected language
+# Define the path to the languages directory
+LANGUAGES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../languages'))
+
 def load_translations(language):
-    path_to_json_en = os.path.join('..', 'languages', 'en.json')
-    path_to_json_es = os.path.join('..', 'languages', 'es.json')
-    if language == 'eng':
-        with open(path_to_json_en, 'r') as f:
+    """Load translations based on the selected language."""
+    try:
+        if language == 'esp':
+            file_path = os.path.join(LANGUAGES_DIR, 'es.json')
+        elif language == 'eng':
+            file_path = os.path.join(LANGUAGES_DIR, 'en.json')
+        else:
+            raise ValueError(f"Unsupported language: {language}")
+
+        with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
-    elif language == 'esp':
-        with open(path_to_json_es, 'r') as f:
-            return json.load(f)
-        
+
+    except FileNotFoundError as e:
+        st.error(f"Translation file not found: {e}")
+        raise
+    except Exception as e:
+        st.error(f"An error occurred while loading translations: {e}")
+        raise
 
 def app():
-    # Language selection
-    language = st.session_state.get('language', {})
+    """Main app function for the config page."""
+    # Set page config
+    st.set_page_config(page_title="Config Page", page_icon="⚙️")
+
+    # Ensure the language is set in session state
+    if 'language' not in st.session_state:
+        st.session_state.language = 'esp'
+
+    # Sidebar for language selection
+    language = st.sidebar.selectbox(
+        'Select Language', ['esp', 'eng'], index=['esp', 'eng'].index(st.session_state.language)
+    )
+    st.session_state.language = language
+
+    # Load translations
     translations = load_translations(language)
 
-    # Display translations for the UI elements
-    st.title(translations['settings_title'])
-    st.write(translations['settings_instructions'])
+    # Page title
+    st.title(translations.get('config_title', 'Configuration'))
 
-    # Required Fields
-    subject = st.text_input(translations['subject'])
-    field = st.selectbox(
-        translations['field_type'], translations['field_options'] 
-    )
-    num_students = st.number_input(translations['num_students'], min_value=1, step=1)
-    time_available = st.slider(translations['class_duration'], 15, 180, 60)
+    # Example content
+    st.write(translations.get('config_instructions', 'No instructions available'))
 
-    # Dropdowns for options
-    level = st.selectbox(
-        translations['class_type'], translations['class_type_options']
-    )
-    modality = st.radio(translations['modality'], ["Virtual", "Presential"])
-    purpose = st.selectbox(
-        translations['class_purpose'], translations['class_purpose_options']
-    )
+    # Footer
+    st.write(translations.get('footer', 'No footer available'))
 
-    # Optional Fields
-    language_input = st.text_input(translations['language_input'], value="Espa\u00f1ol")
-    instructions = st.text_area(translations['special_instructions'])
-
-    # Save details to session state
-    if st.button(translations['save_button']):
-        st.session_state.class_details = {
-            "subject": subject,
-            "field": field,
-            "num_students": num_students,
-            "time_available": time_available,
-            "level": level,
-            "modality": modality,
-            "purpose": purpose,
-            "language": language_input,
-            "instructions": instructions,
-        }
-        st.success(translations['success_message'])
-
-# Run app
+# Call the app function
 if __name__ == "__main__":
     app()
 
