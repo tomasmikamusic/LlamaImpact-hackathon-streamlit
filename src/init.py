@@ -2,7 +2,9 @@ import streamlit as st
 import json
 import os
 
-LANGUAGES_DIR = os.path.join(os.path.dirname(__file__), '../languages')
+# Define absolute paths
+LANGUAGES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../languages'))
+IMAGE_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '../assets/academ-ia-2.png'))
 
 def load_translations(language):
     if language == 'esp':
@@ -42,7 +44,8 @@ translations = load_translations(st.session_state.language)
 st.title(translations['welcome_message'])
 col1, col2, col3 = st.columns([1, 6, 1])  # Adjust these numbers to control the spacing
 with col2:
-    st.image("../assets/academ-ia-2.png", caption="AcademIA logo", width=250, clamp=True)
+    st.image(IMAGE_PATH, caption="AcademIA logo", width=250, clamp=True)
+
 st.write(f"""
     {translations['instructions']}
     - {translations['start_instructions']}
