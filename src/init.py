@@ -2,15 +2,11 @@ import streamlit as st
 import json
 import os
 
-LANGUAGES_DIR = os.path.join(os.path.dirname(__file__), '../languages')
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Directorio del script actual
+path_to_json_es = os.path.join(BASE_DIR, "../../languages/es.json")
 
-def load_translations(language):
-    if language == 'esp':
-        with open(os.path.join(LANGUAGES_DIR, 'es.json'), 'r', encoding='utf-8') as f:
-            return json.load(f)
-    elif language == 'eng':
-        with open(os.path.join(LANGUAGES_DIR, 'en.json'), 'r', encoding='utf-8') as f:
-            return json.load(f)
+with open(path_to_json_es, 'r', encoding='utf-8') as f:
+    translations = json.load(f)
 
 # Set page config
 st.set_page_config(page_title="AcademIA", page_icon="🎓")
