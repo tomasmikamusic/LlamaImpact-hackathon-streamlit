@@ -1,67 +1,64 @@
 import streamlit as st
 import requests
-import json
 
-# API endpoint y clave (asegúrate de usar la clave correcta)
-API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
-API_KEY = "AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"
-
-def generate_class_plan(class_details):
-    """
-    Genera un plan de clase usando la API de IA.
-    """
-    # Asegúrate de que los detalles se conviertan a texto entendible para la API
-    prompt = (
-        f"Genera un plan de clase sobre el tema '{class_details['subject']}' para {class_details['num_students']} "
-        f"estudiantes. Duración: {class_details['time_available']} minutos. Nivel: {class_details['level']}. "
-        f"Modalidad: {class_details['modality']}. Propósito: {class_details['purpose']}. "
-        f"Instrucciones adicionales: {class_details.get('instructions', 'Ninguna')}. "
-    )
-
-    payload = {
-        "contents": [{"parts": [{"text": prompt}]}]
-    }
-
+# Función para generar el plan de clase
+def generate_class_plan(details):
     try:
+        # Realizar la solicitud a la API
         response = requests.post(
-            f"{API_URL}?key={API_KEY}",
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent",
             headers={"Content-Type": "application/json"},
-            data=json.dumps(payload),
+            json={"contents": [{"parts": [{"text": f"Generate a class plan for: {details}"}]}]},
+            params={"key": "AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"},
         )
-        response.raise_for_status()
-        result = response.json()
 
-        # Verifica si el resultado tiene la estructura correcta
-        if "contents" in result and result["contents"]:
-            return result["contents"][0]["parts"][0]["text"]
+        # Convertir la respuesta a JSON
+        response_json = response.json()
+
+        # Depurar respuesta completa en la interfaz
+        st.write("API Response:", response_json)
+
+        # Manejar la estructura de la respuesta
+        if "contents" in response_json and len(response_json["contents"]) > 0:
+            return response_json["contents"][0]["parts"][0]["text"]
         else:
-            st.error("La API no devolvió un resultado válido.")
-            return "No se pudo generar el plan de clase."
+            raise KeyError("Estructura inesperada en la respuesta de la API.")
+    except KeyError as e:
+        st.error("La API no devolvió un resultado válido.")
+        st.write("Error Details:", response_json)  # Línea de depuración
+        raise e
     except requests.exceptions.RequestException as e:
-        st.error(f"Error al conectar con la API de IA: {e}")
-        return "No se pudo conectar con la API."
+        st.error("Error al conectarse con la API.")
+        st.write("Detalles del error:", str(e))
+        raise e
 
+# Configurar la página principal de Streamlit
 def app():
     st.title("Generador de Plan de Clase")
-    st.write("Genera un plan de clase basado en los detalles proporcionados en Configuración.")
+    st.write("Sigue las instrucciones para generar un plan de clase basado en los detalles proporcionados.")
 
-    # Verifica si hay detalles configurados
+    # Comprobar si los detalles de la clase están en el estado de sesión
     if "class_details" not in st.session_state:
-        st.error("No se han configurado detalles de la clase. Ve a Configuración primero.")
+        st.error("No se han proporcionado detalles de la clase. Configura los detalles primero en la pestaña de configuración.")
         return
 
-    class_details = st.session_state["class_details"]
+    # Obtener los detalles de la clase desde el estado de sesión
+    details = st.session_state["class_details"]
 
-    # Muestra los detalles de la clase
+    # Mostrar los detalles en la interfaz
     st.subheader("Detalles de la Clase")
-    st.json(class_details)
+    st.json(details)
 
     # Botón para generar el plan de clase
     if st.button("Generar Plan de Clase"):
-        st.write("Generando el plan de clase...")
-        plan = generate_class_plan(class_details)
-        st.subheader("Plan de Clase Generado")
-        st.write(plan)
+        st.info("Generando el plan de clase, por favor espera...")
+        try:
+            plan = generate_class_plan(details)
+            st.subheader("Plan de Clase Generado")
+            st.write(plan)
+        except Exception as e:
+            st.error("Ocurrió un error al generar el plan de clase.")
 
+# Ejecutar la aplicación
 if __name__ == "__main__":
     app()
