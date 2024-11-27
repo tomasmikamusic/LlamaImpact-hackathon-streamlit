@@ -1,60 +1,75 @@
-import openai
 import streamlit as st
-import os
+import requests
+import json
 
-# Configurar la clave de la API de OpenAI
-openai.api_key = "Your_API_Key"  # Reemplaza con tu clave real
+# Configuración de la API de Google Generative Language
+API_KEY = "AIzaSyCpl4_OsbQ916NPSGGAJyd7ft9-eOlqKP0"
+BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
 
-# Función para generar el plan de clase utilizando la API de OpenAI
-def generate_class_plan(class_details):
-    """Genera un plan de clase basado en los detalles proporcionados."""
+# Función para generar el plan de clase usando la API
+def generate_class_plan(details):
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {"text": f"Generate a class plan for: {details}"}
+                ]
+            }
+        ]
+    }
+    headers = {
+        "Content-Type": "application/json"
+    }
     try:
-        st.spinner("Generando el plan de clase...")
-        user_input = (
-            f"Class topic: {class_details['subject']}, "
-            f"Number of students: {class_details['num_students']}, "
-            f"Time available: {class_details['time_available']} minutes, "
-            f"Class level: {class_details['level']}, "
-            f"Modality: {class_details['modality']}, "
-            f"Purpose: {class_details['purpose']}, "
-            f"Language: Spanish, "
-            f"Special instructions: {class_details.get('instructions', 'None')}."
+        response = requests.post(
+            f"{BASE_URL}?key={API_KEY}",
+            headers=headers,
+            data=json.dumps(payload)
         )
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant for generating class plans."},
-                {"role": "user", "content": f"Generate a class plan with the following details: {user_input}"}
-            ],
-            temperature=0.7,
-        )
-        return response.choices[0].message["content"]
-    except openai.error.OpenAIError as e:
-        st.error(f"Error al conectar con la API de OpenAI: {e}")
+        if response.status_code == 200:
+            result = response.json()
+            return result["contents"][0]["parts"][0]["text"]
+        else:
+            st.error(f"Error al conectar con la API: {response.status_code} - {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error al conectar con la API: {e}")
         return None
 
 # Aplicación principal
 def app():
     st.title("Generador de Plan de Clase")
-    st.write("Sigue las instrucciones para generar un plan de clase basado en tus detalles.")
+    st.write("Proporciona los detalles de la clase para generar un plan.")
 
-    # Validar si los detalles de la clase están en la sesión
-    if "class_details" not in st.session_state:
-        st.error("No se han proporcionado detalles de la clase. Configura los detalles primero.")
-        return
+    # Formulario para ingresar detalles de la clase
+    with st.form(key="class_plan_form"):
+        subject = st.text_input("Tema de la clase")
+        num_students = st.number_input("Número de estudiantes", min_value=1)
+        time_available = st.number_input("Duración de la clase (minutos)", min_value=1)
+        level = st.selectbox("Nivel de la clase", ["Primaria", "Secundaria", "Universitaria"])
+        modality = st.selectbox("Modalidad", ["Presencial", "Online"])
+        purpose = st.text_area("Propósito de la clase")
+        submitted = st.form_submit_button("Generar Plan de Clase")
 
-    # Mostrar detalles de la clase
-    class_details = st.session_state["class_details"]
-    st.subheader("Detalles de la Clase")
-    st.json(class_details)
+    # Generar el plan de clase si se envía el formulario
+    if submitted:
+        if subject and purpose:
+            st.info("Generando plan de clase...")
+            details = {
+                "subject": subject,
+                "num_students": num_students,
+                "time_available": time_available,
+                "level": level,
+                "modality": modality,
+                "purpose": purpose
+            }
+            plan = generate_class_plan(details)
+            if plan:
+                st.subheader("Plan de Clase Generado")
+                st.write(plan)
+        else:
+            st.error("Por favor, completa todos los campos requeridos.")
 
-    # Botón para generar el plan de clase
-    if st.button("Generar Plan de Clase"):
-        plan = generate_class_plan(class_details)
-        if plan:
-            st.subheader("Plan de Clase Generado")
-            st.write(plan)
-
-# Ejecutar la aplicación
+# Ejecutar la app
 if __name__ == "__main__":
     app()
