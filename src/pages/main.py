@@ -59,12 +59,23 @@ def generate_class_plan(class_details, document_chunks):
 
 # Load translations
 def load_translations(language):
-    if language == 'eng':
-        with open('../languages/en.json', 'r') as f:
-            return json.load(f)
-    elif language == 'esp':
-        with open('../languages/es.json', 'r') as f:
-            return json.load(f)
+    try:
+        if language == 'eng':
+            with open('../languages/en.json', 'r', encoding='utf-8') as f:
+                return json.load(f)
+        elif language == 'esp':
+            with open('../languages/es.json', 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            st.error(f"Unsupported language: {language}")
+            return {}
+    except FileNotFoundError:
+        st.error(f"Translation file for '{language}' not found.")
+        return {}
+    except json.JSONDecodeError:
+        st.error(f"Translation file for '{language}' is not valid JSON.")
+        return {}
+
 
 # Main application logic
 def app():
