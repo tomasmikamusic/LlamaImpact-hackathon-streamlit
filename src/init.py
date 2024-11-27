@@ -2,13 +2,15 @@ import streamlit as st
 import json
 import os
 
-# Function to load translations based on language preference
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+LANGUAGES_DIR = os.path.join(BASE_DIR, 'languages')
+
 def load_translations(language):
-    if language == 'eng':
-        with open('../languages/en.json', 'r', encoding='utf-8') as f:
+    if language == 'en':
+        with open(os.path.join(LANGUAGES_DIR, 'en.json'), 'r', encoding='utf-8') as f:
             return json.load(f)
     elif language == 'esp':
-        with open('/languages/es.json', 'r', encoding='utf-8') as f:
+        with open(os.path.join(LANGUAGES_DIR, 'es.json'), 'r', encoding='utf-8') as f:
             return json.load(f)
 
 # Set page config
