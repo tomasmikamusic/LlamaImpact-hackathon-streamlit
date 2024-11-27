@@ -38,54 +38,31 @@ def generate_class_plan(details):
 
 # Función principal de la app
 def app():
-    st.title("Generador de Plan de Clase")
-    st.write("Proporciona los detalles necesarios para generar un plan de clase personalizado.")
+    st.title("Plan de Clase Generado")
     
-    if "class_details" not in st.session_state:
-        st.session_state["class_details"] = {}
+    # Verificar si los detalles están en el estado de sesión
+    if "class_details" not in st.session_state or not st.session_state["class_details"]:
+        st.error("No se encontraron detalles de la clase. Configúralos primero en la pestaña 'Config'.")
+        return
     
-    # Formulario para ingresar detalles de la clase
-    with st.form("class_details_form"):
-        subject = st.text_input("Materia", key="subject")
-        level = st.text_input("Nivel", key="level")
-        num_students = st.number_input("Número de estudiantes", min_value=1, step=1, key="num_students")
-        time_available = st.number_input("Tiempo disponible (en minutos)", min_value=1, step=1, key="time_available")
-        modality = st.text_input("Modalidad (presencial/virtual)", key="modality")
-        purpose = st.text_input("Propósito de la clase", key="purpose")
-        submit_button = st.form_submit_button("Guardar detalles")
+    # Mostrar resumen del contexto
+    st.write("### Resumen de los detalles de la clase:")
+    st.json(st.session_state["class_details"])
     
-    # Guardar detalles en el estado de sesión
-    if submit_button:
-        st.session_state["class_details"] = {
-            "subject": subject,
-            "level": level,
-            "num_students": num_students,
-            "time_available": time_available,
-            "modality": modality,
-            "purpose": purpose,
-        }
-        st.success("Detalles guardados exitosamente.")
-    
-    # Mostrar detalles guardados
-    if st.session_state["class_details"]:
-        st.write("### Detalles de la clase:")
-        st.json(st.session_state["class_details"])
-        
-        # Generar plan de clase
-        if st.button("Generar Plan de Clase"):
-            with st.spinner("Generando plan de clase..."):
-                details = st.session_state["class_details"]
-                details_str = (
-                    f"Materia: {details['subject']}, Nivel: {details['level']}, "
-                    f"Número de estudiantes: {details['num_students']}, Tiempo disponible: {details['time_available']} minutos, "
-                    f"Modalidad: {details['modality']}, Propósito: {details['purpose']}"
-                )
-                plan = generate_class_plan(details_str)
-                if plan:
-                    st.subheader("Plan de Clase Generado")
-                    st.write(plan)
+    # Generar el plan de clase
+    if st.button("Generar Plan de Clase"):
+        with st.spinner("Generando plan de clase..."):
+            details = st.session_state["class_details"]
+            details_str = (
+                f"Materia: {details['subject']}, Nivel: {details['level']}, "
+                f"Número de estudiantes: {details['num_students']}, Tiempo disponible: {details['time_available']} minutos, "
+                f"Modalidad: {details['modality']}, Propósito: {details['purpose']}"
+            )
+            plan = generate_class_plan(details_str)
+            if plan:
+                st.subheader("Plan de Clase Generado")
+                st.write(plan)
 
 # Ejecutar la app
 if __name__ == "__main__":
     app()
-
