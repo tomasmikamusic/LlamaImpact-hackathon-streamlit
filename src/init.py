@@ -2,14 +2,32 @@ import streamlit as st
 import json
 import os
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # Directorio del script actual
-path_to_json_es = os.path.join(BASE_DIR, "../../languages/es.json")
+# Define the path to the languages directory
+LANGUAGES_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../languages'))
 
-with open(path_to_json_es, 'r', encoding='utf-8') as f:
-    translations = json.load(f)
+# Function to load translations
+def load_translations(language):
+    try:
+        if language == 'esp':
+            with open(os.path.join(LANGUAGES_DIR, 'es.json'), 'r', encoding='utf-8') as f:
+                return json.load(f)
+        elif language == 'eng':
+            with open(os.path.join(LANGUAGES_DIR, 'en.json'), 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            raise ValueError(f"Unsupported language: {language}")
+    except FileNotFoundError as e:
+        st.error(f"Translation file not found: {e}")
+        raise
+    except Exception as e:
+        st.error(f"An error occurred while loading translations: {e}")
+        raise
 
 # Set page config
 st.set_page_config(page_title="AcademIA", page_icon="🎓")
+
+# Print the languages directory for debugging purposes
+st.write(f"Languages directory: {LANGUAGES_DIR}")
 
 # Initialize session state for language if not already set
 if 'language' not in st.session_state:
@@ -20,16 +38,9 @@ def change_language():
     st.session_state.language = st.sidebar.selectbox(
         'Select Language', ['esp', 'eng'], index=['esp', 'eng'].index(st.session_state.language)
     )
-def change_language_sp():
-    st.session_state.language = st.sidebar.selectbox(
-        'Seleccionar Idioma', ['esp', 'eng'], index=['esp', 'eng'].index(st.session_state.language)
-    )
 
 # Call the language change function
-if st.session_state.language == 'esp':
-    change_language_sp()
-else:
-    change_language()
+change_language()
 
 # Load the selected language's translations
 translations = load_translations(st.session_state.language)
@@ -38,12 +49,14 @@ translations = load_translations(st.session_state.language)
 st.title(translations['welcome_message'])
 col1, col2, col3 = st.columns([1, 6, 1])  # Adjust these numbers to control the spacing
 with col2:
-    import os
+    try:
+        st.image(os.path.join(os.path.dirname(__file__), "../assets/academ-ia-2.png"), 
+                 caption="AcademIA logo", width=250, clamp=True)
+    except FileNotFoundError as e:
+        st.error(f"Logo file not found: {e}")
+    except Exception as e:
+        st.error(f"An error occurred while loading the logo: {e}")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-image_path = os.path.join(BASE_DIR, '../assets/academ-ia-2.png')
-
-st.image(image_path, caption="AcademIA logo", width=250, clamp=True)
 st.write(f"""
     {translations['instructions']}
     - {translations['start_instructions']}
@@ -52,3 +65,4 @@ st.write(f"""
 
 # Footer
 st.write(translations['footer'])
+
