@@ -12,8 +12,8 @@ load_dotenv()
 
 # Initialize OpenAI client
 client = OpenAI(
-    base_url=os.getenv("LLAMA_BASE_URL"),
-    api_key=os.getenv("LLAMA_API_KEY"),
+    base_url="https://api.llamaimpact.com",  # Cambia esta URL si es diferente.
+    api_key="d196b8da1ffe4e3d812b292b280ce3cf",  # Reemplaza "LATAMIA" con tu clave real de la API.
 )
 
 # Load GloVe embeddings
