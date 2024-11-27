@@ -21,7 +21,7 @@
     "save_button": "Save Class Details",
     "success_message": "Class details saved successfully! Proceed to the next page.",
     "class_plan_generator": "Class Plan Generator",
-    "use_saved_details": "Use the saved class details to generate your class plan.",
+    "use_saved_details": "Use saved class details",
     "no_class_details": "No class details found! Please fill in the config page first.",
     "class_details_title": "Class Details:",
     "upload_reference_materials": "Upload Reference Materials",
