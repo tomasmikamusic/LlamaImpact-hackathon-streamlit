@@ -1,64 +1,80 @@
-import os
 import streamlit as st
-import json
+import os
+import PyPDF2
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
 
-# Función para cargar las traducciones en español
-def load_translations():
-    try:
-        file_path = os.path.abspath('/languages/es.json')
-        st.write(f"Buscando el archivo en: {file_path}")
-        with open(file_path, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        st.error(f"El archivo de traducción en español no se encontró en: {file_path}")
-        return {}
-    except json.JSONDecodeError:
-        st.error("El archivo de traducción en español no es un JSON válido.")
-        return {}
+# Configuración de la página
+st.set_page_config(page_title="Generador de Plan de Clase", page_icon="🎓")
 
+# Función para extraer texto de PDF
+def extract_text_from_pdf(uploaded_file):
+    pdf_reader = PyPDF2.PdfReader(uploaded_file)
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text()
+    return text
 
-# Lógica principal de la aplicación
+# Función para dividir el texto en fragmentos
+def chunk_text(text, chunk_size=50):
+    words = text.split()
+    chunks = []
+    for i in range(0, len(words), chunk_size):
+        chunks.append(" ".join(words[i:i + chunk_size]))
+    return chunks
+
+# Función para procesar archivos subidos
+def process_uploaded_files(uploaded_files):
+    document_chunks = []
+    for uploaded_file in uploaded_files:
+        if uploaded_file.type == "application/pdf":
+            text = extract_text_from_pdf(uploaded_file)
+            chunks = chunk_text(text)
+            document_chunks.extend(chunks)
+        else:
+            text = uploaded_file.read().decode("utf-8")
+            chunks = chunk_text(text)
+            document_chunks.extend(chunks)
+    return document_chunks
+
+# Función para generar similitudes de texto
+def find_relevant_chunks(embeddings, query_embedding, chunks, top_k=3):
+    similarities = cosine_similarity([query_embedding], embeddings)[0]
+    top_indices = similarities.argsort()[-top_k:][::-1]
+    return [chunks[i] for i in top_indices]
+
+# Función principal de la aplicación
 def app():
-    # Cargar las traducciones directamente en español
-    translations = load_translations()
+    st.title("Generador de Plan de Clase")
+    st.write("Sigue las instrucciones para generar un plan de clase basado en tus detalles.")
 
-    # Validar que las traducciones estén disponibles
-    if not translations:
-        st.error("No se pudieron cargar las traducciones. Verifica tu configuración.")
-        return
-
-    # Título y secciones principales
-    if 'class_plan_generator' in translations:
-        st.title(translations['class_plan_generator'])
-    else:
-        st.error("Falta la traducción para 'class_plan_generator'.")
-        return
-
-    st.write(translations.get('use_saved_details', "Instrucción por defecto"))
-
-    # Detalles de la clase
+    # Verifica si existen detalles de la clase
     if "class_details" not in st.session_state:
-        st.error(translations.get('no_class_details', "No hay detalles de clase guardados."))
+        st.error("No se han proporcionado detalles de la clase. Configura los detalles primero.")
         return
 
     class_details = st.session_state["class_details"]
-    st.subheader(translations.get('class_details_title', "Detalles de la clase"))
+
+    st.subheader("Detalles de la Clase")
     st.json(class_details)
 
-    # Subir archivos de referencia
-    st.sidebar.header(translations.get('upload_reference_materials', "Subir materiales de referencia"))
+    # Subir archivos para contexto adicional
+    st.sidebar.header("Subir materiales de referencia")
     uploaded_files = st.sidebar.file_uploader(
-        translations.get('upload_documents', "Subir documentos"),
+        "Sube tus documentos en formato PDF o texto",
         type=["txt", "pdf"],
         accept_multiple_files=True,
     )
 
-    if st.button(translations.get('generate_class_plan_2', "Generar plan de clase")):
-        st.write(translations.get('generated_class_plan', "Plan de clase generado"))
-        st.write("Funcionalidad en desarrollo.")  # Aquí agregarías la lógica para generar el plan de clase
+    if st.button("Generar Plan de Clase"):
+        document_chunks = process_uploaded_files(uploaded_files)
+        if document_chunks:
+            st.write(f"Se procesaron {len(document_chunks)} fragmentos de documentos.")
+
+        # Generar plan (simulación para esta versión simplificada)
+        st.subheader("Plan de Clase Generado")
+        st.write("Aquí estaría el plan de clase generado basado en los detalles proporcionados.")
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
     app()
-
-
