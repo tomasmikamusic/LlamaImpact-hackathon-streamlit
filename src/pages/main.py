@@ -5,7 +5,7 @@ import json
 # Función para cargar las traducciones en español
 def load_translations():
     try:
-        file_path = os.path.abspath('../languages/es.json')
+        file_path = os.path.abspath('/languages/es.json')
         st.write(f"Buscando el archivo en: {file_path}")
         with open(file_path, 'r', encoding='utf-8') as f:
             return json.load(f)
